@@ -18,9 +18,13 @@ namespace BlogProgramistyczny.Controllers
         }
 
         [HttpGet("api/Administrator/Comments")]
-        public IActionResult Index([FromQuery(Name = "page")] string page, [FromQuery(Name = "limit")] string limit = "20", [FromQuery(Name = "sort")] string sort = "desc")
+        public IActionResult Index([FromQuery(Name = "page")] int page, [FromQuery(Name = "limit")] int limit = 20, [FromQuery(Name = "sort")] string sort = "desc")
         {
-            return new ResponseObjectResult(_commentService.List(Int16.Parse(page), Int16.Parse(limit), sort));
+            return new ResponseObjectResult(_commentService.List(new Helpers.Paginate.Parameters() {
+                Sort = sort,
+                Size = limit,
+                Index = page
+            }));
         }
 
         [HttpGet("api/Administrator/Comments/{id}/Remove")]
@@ -41,20 +45,20 @@ namespace BlogProgramistyczny.Controllers
         {
             if (commentCreate == null)
             {
-                throw new ApiException("Błąd danych");
+                throw new ApiException("Błąd danych parametru");
             }
 
             if (!ModelState.IsValid)
             {
-                throw new ApiValidationException("");
+                throw new ApiValidationException("Walidacja");
             }
 
             if (!_commentService.Replace(id, commentCreate))
             {
-                throw new ApiException("Bład wykonano akcje");
+                throw new ApiException("Bład wykonano akcji dopowiedzi na komentarz");
             }
 
-            return new ResponseObjectResult("Pomyślnie wykonano akcje");
+            return new ResponseObjectResult("Pomyślnie wykonano akcje dopowiedzi na komentarz");
         }
     }
 }

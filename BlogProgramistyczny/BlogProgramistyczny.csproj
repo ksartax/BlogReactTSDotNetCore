@@ -5,9 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="ModelView\Category\" />
-    <Folder Include="ModelView\Option\" />
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="ModelView\Category\**" />
+    <Compile Remove="ModelView\Option\**" />
+    <Content Remove="Migrations\**" />
+    <Content Remove="ModelView\Category\**" />
+    <Content Remove="ModelView\Option\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="ModelView\Category\**" />
+    <EmbeddedResource Remove="ModelView\Option\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="ModelView\Category\**" />
+    <None Remove="ModelView\Option\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\uploadFiles\" />
   </ItemGroup>
 

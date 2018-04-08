@@ -18,22 +18,21 @@ namespace BlogProgramistyczny.Controllers
         }
 
         [HttpGet("api/Administrator/Article")]
-        public IActionResult List([FromQuery(Name = "page")] string page, [FromQuery(Name = "limit")] string limit = "20", [FromQuery(Name = "sort")] string sort = "desc")
+        public IActionResult List([FromQuery(Name = "page")] int page, [FromQuery(Name = "limit")] int limit = 20, [FromQuery(Name = "sort")] string sort = "desc")
         {
-            return new ResponseObjectResult(this._articleService.List(Int16.Parse(page), Int16.Parse(limit), sort));
+            return new ResponseObjectResult(_articleService.List(new Helpers.Paginate.Parameters() {
+                Index = page,
+                Size = limit,
+                Sort = sort
+            }));
         }
 
         [HttpGet("api/Administrator/Article/{url}")]
         public IActionResult Article(string url)
         {
-            if (url == null)
-            {
-                throw new ApiException("Błads");
-            }
-
             try
             {
-                return new ResponseObjectResult(this._articleService.Get(url));
+                return new ResponseObjectResult(_articleService.GetByUrl(url));
             }
             catch (Exception e)
             {
@@ -46,7 +45,7 @@ namespace BlogProgramistyczny.Controllers
         {
             try
             {
-                return new ResponseObjectResult(this._articleService.Get(id));
+                return new ResponseObjectResult(_articleService.Get(id));
             }
             catch (Exception e)
             {
@@ -64,36 +63,36 @@ namespace BlogProgramistyczny.Controllers
 
             if (!ModelState.IsValid)
             {
-                throw new ApiValidationException("");
+                throw new ApiValidationException("Walidacja");
             }
 
-            if (!this._articleService.Save(articleCreate))
+            if (!_articleService.Save(articleCreate))
             {
-                throw new ApiException("Bład wykonano akcje");
+                throw new ApiException("Bład wykonano akcje zapisu artykułu");
             }
 
-            return new ResponseObjectResult("Pomyślnie wykonano akcje");
+            return new ResponseObjectResult("Pomyślnie wykonano akcje dodania artykułu");
         }
 
         [HttpPost("api/Administrator/Article/{id}/Edit")]
-        public IActionResult Edit([FromBody] ArticleCreate articleCreate, string id)
+        public IActionResult Edit([FromBody] ArticleUpdate articleUpdate, int id)
         {
-            if (articleCreate == null)
+            if (articleUpdate == null)
             {
                 throw new ApiException("Błąd danych");
             }
 
             if (!ModelState.IsValid)
             {
-                throw new ApiValidationException("");
+                throw new ApiValidationException("Walidacja");
             }
 
-            if (!this._articleService.Update(int.Parse(id), articleCreate))
+            if (!this._articleService.Update(id, articleUpdate))
             {
-                throw new ApiException("Bład wykonano akcje");
+                throw new ApiException("Bład wykonano akcje edycji artykułu");
             }
 
-            return new ResponseObjectResult("Pomyślnie wykonano akcje");
+            return new ResponseObjectResult("Pomyślnie wykonano akcje edycji artykułu");
         }
     }
 }

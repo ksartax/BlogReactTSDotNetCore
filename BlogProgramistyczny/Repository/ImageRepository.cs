@@ -9,53 +9,56 @@ namespace BlogProgramistyczny.Repository
 {
     public class ImageRepository : IImageRepository
     {
-        public readonly ApplicationContext _applicationContext;
+        private readonly ApplicationContext _applicationContext;
 
         public ImageRepository(ApplicationContext applicationContext)
         {
-            this._applicationContext = applicationContext;
+            _applicationContext = applicationContext;
         }
 
         public Image Get(int id)
         {
-            return this._applicationContext.Images.Where(p => p.Id == id).FirstOrDefault();
+            return _applicationContext.Images
+                .Where(p => p.Id == id)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Image> List()
         {
-            return this._applicationContext.Images.ToArray();
+            return _applicationContext.Images
+                .ToList();
         }
 
         public bool Save(Image value)
         {
-            this._applicationContext.Images.Add(value);
+            _applicationContext.Images.Add(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Update(Image value)
         {
-            this._applicationContext.Images.Update(value);
+            _applicationContext.Images.Update(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(Image value)
         {
-            this._applicationContext.Images.Remove(value);
+            _applicationContext.Images.Remove(value);
             
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(int id)
         {
-            var image = this.Get(id);
+            var image = Get(id);
             if (image == null)
             {
                 throw new Exception("Błąd podczas usówania, brak elementu o id : " + id);
             }
 
-            return this.Delete(image);
+            return Delete(image);
         }
     }
 }

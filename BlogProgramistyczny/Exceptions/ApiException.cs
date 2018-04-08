@@ -7,7 +7,8 @@ namespace BlogProgramistyczny.Exceptions
         public int Code { get; set; }
 
         public ApiException(String message) : base(message)
-        {}
+        {
+        }
 
         public ApiException(String message, int code) : base(message)
         {

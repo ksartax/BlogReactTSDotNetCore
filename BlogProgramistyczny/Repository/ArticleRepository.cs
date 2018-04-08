@@ -5,21 +5,22 @@ using System.Collections.Generic;
 using BlogProgramistyczny.Repository.Interface;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using BlogProgramistyczny.Helpers.Paginate;
 
 namespace BlogProgramistyczny.Repository
 {
     public class ArticleRepository : IArticleRepository
     {
-        public readonly ApplicationContext _applicationContext;
+        private readonly ApplicationContext _applicationContext;
 
         public ArticleRepository(ApplicationContext applicationContext)
         {
-            this._applicationContext = applicationContext;
+            _applicationContext = applicationContext;
         }
 
         public Article Get(int id)
         {
-            return this._applicationContext.Articles
+            return _applicationContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
@@ -27,54 +28,99 @@ namespace BlogProgramistyczny.Repository
                 .FirstOrDefault();
         }
 
-        public Article Get(string url)
+        public Article GetByUrl(string url)
         {
-            return this._applicationContext.Articles
+            return _applicationContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
-                .Where(p => p.Url.Contains(url))
+                .Where(a => a.Url.Contains(url))
+                .FirstOrDefault();
+        }
+
+        public Article GetFirst()
+        {
+            return _applicationContext.Articles
+                .Include(a => a.Comments)
+                .Include(a => a.Images)
+                    .ThenInclude(i => i.Image)
+                .OrderByDescending(a => a.CreatedAt)
                 .FirstOrDefault();
         }
 
         public IEnumerable<Article> List()
         {
-            return this._applicationContext.Articles
+            return _applicationContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
-                    .ThenInclude(i => i.Image);
+                    .ThenInclude(i => i.Image)
+                .ToList();
+        }
+
+        public IEnumerable<Article> ListByPaginatedParameters(Parameters parameters)
+        {
+            var query = _applicationContext.Articles
+                .Include(a => a.Comments)
+                .Include(a => a.Images)
+                    .ThenInclude(i => i.Image)
+                .AsQueryable();
+
+            if (parameters.Sort != null)
+            {
+                switch (parameters.Sort)
+                {
+                    case "DESC":
+                        query = query.OrderByDescending(a => a.CreatedAt);
+                        break;
+                    case "ASC":
+                        query = query.OrderBy(a => a.CreatedAt);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return query.Skip(
+                (parameters.Index - 1) * parameters.Size)
+                .Take(parameters.Size)
+                .ToList();
         }
 
         public bool Save(Article value)
         {
-            this._applicationContext.Articles.Add(value);
+            _applicationContext.Articles.Add(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Update(Article value)
         {
-            this._applicationContext.Articles.Update(value);
+            _applicationContext.Articles.Update(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(Article value)
         {
-            this._applicationContext.Articles.Remove(value);
+            _applicationContext.Articles.Remove(value);
             
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(int id)
         {
-            var article = this.Get(id);
+            var article = Get(id);
             if (article == null)
             {
                 throw new Exception("Błąd podczas usówania, brak elementu o id : " + id);
             }
 
-            return this.Delete(article);
+            return Delete(article);
+        }
+
+        public int Count()
+        {
+            return _applicationContext.Articles.Count();
         }
     }
 }

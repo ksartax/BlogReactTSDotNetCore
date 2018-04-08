@@ -16,20 +16,20 @@ namespace BlogProgramistyczny.Controllers
             _emailService = emailService;
         }
 
-        [HttpPost, Route("api/Contact/Send")]
+        [HttpPost("api/Contact/Send")]
         public IActionResult Send([FromBody] Contact contact)
         {
             if (contact == null)
             {
-                throw new ApiException("Błąd danych");
+                throw new ApiException("Błąd danych parametru");
             }
 
             if (!ModelState.IsValid)
             {
-                throw new ApiValidationException("");
+                throw new ApiValidationException("Walidacja");
             }
 
-            return new ResponseObjectResult(this._emailService.SendEmailAsync(contact).Result);
+            return new ResponseObjectResult(_emailService.SendEmailAsync(contact).Result);
         }
     }
 }

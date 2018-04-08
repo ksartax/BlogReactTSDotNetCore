@@ -1,10 +1,14 @@
 ﻿using BlogProgramistyczny.Entites;
-using BlogProgramistyczny.ModelView.Article;
+using BlogProgramistyczny.Helpers.Paginate;
+using System.Collections.Generic;
 
 namespace BlogProgramistyczny.Repository.Interface
 {
     public interface IArticleRepository : IRepository<Article>
     {
-        Article Get(string url);
+        Article GetByUrl(string url);
+        Article GetFirst();
+        IEnumerable<Article> ListByPaginatedParameters(Parameters parameters);
+        int Count();
     }
 }

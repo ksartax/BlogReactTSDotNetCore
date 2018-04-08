@@ -35,8 +35,8 @@ export default class Footer extends React.Component<{}, {}> {
                 }
 
                 let _posts = new Array<Post>();
-                let responseData = response.responseData;
-                for (let po of responseData.items) {
+                let responseData = response.responseData.items;
+                for (let po of responseData) {
                     let _post = new Post(
                         po.id,
                         po.title,

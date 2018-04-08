@@ -69,8 +69,8 @@ export default class Comments extends React.Component<{}, {}>
                 }
 
                 context.setState({
-                    pageIndex: responseData.pageIndex,
-                    totalPage: responseData.totalPages,
+                    pageIndex: responseData.parameters.index,
+                    totalPage: responseData.parameters.totalIndex,
                     comments: _comments
                 });
             })

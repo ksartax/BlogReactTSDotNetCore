@@ -28,16 +28,12 @@ export default class Layout extends React.Component {
         });
     };
 
-    test() {
-        console.log("dziala");
-    }
-
     render() {
         const history = createBrowserHistory()
 
         return (
             <Router history={history}>
-                    <Grid columns={2} stackable>
+                <Grid columns={2} stackable divided={false} style={{ marginTop: '0px' }}>
                         <Grid.Column computer='4' style={{
                             backgroundImage: "url('http://2.bp.blogspot.com/-hZXRNdtcHBM/WMVliQpFi-I/AAAAAAAABrU/C3LmH9wsQdwF3b7obdz3ttAky2m0U0bIQCK4B/s0/compressed+bg.jpg')",
                             backgroundRepeat: 'no-repeat',
@@ -66,14 +62,16 @@ export default class Layout extends React.Component {
                             overflow: 'scroll',
                             height: '100vh',
                             overflowX: 'hidden'
-                        }}>
+                        }} id='main-div'>
                         <div>
-                            <Switch>
-                                <Route exact path="/" component={Home} />
-                                <Route path="/o-mnie" component={About} />
-                                <Route path="/view/:use" component={PostView} />
-                                <Route component={NotFound} />
-                            </Switch>
+                            <ScrollToTop>
+                                <Switch>
+                                    <Route exact path="/" component={Home} />
+                                    <Route exact path="/o-mnie" component={About} />
+                                    <Route exact path="/view/:use" component={PostView} />
+                                    <Route exact component={NotFound} />
+                                </Switch>
+                            </ScrollToTop>
                          </div>
                             <div>
                                 <Footer />
@@ -82,5 +80,18 @@ export default class Layout extends React.Component {
                     </Grid>
                 </Router>
         );
+    }
+}
+
+class ScrollToTop extends React.Component {
+    componentDidUpdate(prevProps: any) {
+        var myDiv = document.getElementById('main-div');
+        if (myDiv != null) {
+            myDiv.scrollTop = 0;
+        }
+    }
+
+    render() {
+        return this.props.children
     }
 }

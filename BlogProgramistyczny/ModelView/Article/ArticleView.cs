@@ -29,7 +29,7 @@ namespace BlogProgramistyczny.ModelView.Article
 
             Image = new ImageView()
             {
-                Path = article.Images?.FirstOrDefault()?.Image.Path
+                Path = article.Images?.FirstOrDefault()?.Image?.Path
             };
         }
     }

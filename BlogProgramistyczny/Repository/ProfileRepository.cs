@@ -5,61 +5,95 @@ using System.Collections.Generic;
 using BlogProgramistyczny.Repository.Interface;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using BlogProgramistyczny.Helpers.Paginate;
 
 namespace BlogProgramistyczny.Repository
 {
     public class ProfileRepository : IProfileRepository
     {
-        public readonly ApplicationContext _applicationContext;
+        private readonly ApplicationContext _applicationContext;
 
         public ProfileRepository(ApplicationContext applicationContext)
         {
-            this._applicationContext = applicationContext;
+            _applicationContext = applicationContext;
         }
 
         public Profil Get(int id)
         {
-            return this._applicationContext.Profile
+            return _applicationContext.Profile
                 .Include(p => p.Options)
                 .FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<Profil> List()
         {
-            return this._applicationContext.Profile
-                .Include(p => p.Options);
+            return _applicationContext.Profile
+                .Include(p => p.Options)
+                .ToList();
         }
 
         public bool Save(Profil value)
         {
-            this._applicationContext.Profile.Add(value);
+            _applicationContext.Profile.Add(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Update(Profil value)
         {
-            this._applicationContext.Profile.Update(value);
+            _applicationContext.Profile.Update(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(Profil value)
         {
-            this._applicationContext.Profile.Remove(value);
+            _applicationContext.Profile.Remove(value);
             
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(int id)
         {
-            var profile = this.Get(id);
+            var profile = Get(id);
             if (profile == null)
             {
                 throw new Exception("Błąd podczas usówania, brak elementu o id : " + id);
             }
 
-            return this.Delete(profile);
+            return Delete(profile);
+        }
+
+        public IEnumerable<Profil> ListByPaginatedParameters(Parameters parameters)
+        {
+            var query = _applicationContext.Profile
+                .Include(p => p.Options)
+                .AsQueryable();
+
+            if (parameters.Sort != null)
+            {
+                switch (parameters.Sort)
+                {
+                    case "DESC":
+                        query = query.OrderByDescending(a => a.Id);
+                        break;
+                    case "ASC":
+                        query = query.OrderBy(a => a.Id);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return query.Skip(
+                (parameters.Index - 1) * parameters.Size)
+                .Take(parameters.Size)
+                .ToList();
+        }
+
+        public int Count()
+        {
+            return _applicationContext.Profile.Count();
         }
     }
 }

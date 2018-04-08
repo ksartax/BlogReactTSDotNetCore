@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BlogProgramistyczny.ModelView.Profil
 {
@@ -9,6 +10,24 @@ namespace BlogProgramistyczny.ModelView.Profil
         public string Description { get; set; }
         public string ImgPath { get; set; }
 
-        public virtual ICollection<ProfileOptionView> Options { get; set; }
+        public virtual ICollection<ProfileOptionView> Options { get; set; } = new List<ProfileOptionView>();
+
+        public ProfilView(Entites.Profil profil)
+        {
+            Description = profil.Description;
+            Header = profil.Header;
+            ImgPath = profil.ImgPath;
+            Title = profil.Title;
+
+            profil.Options.ToList().ForEach(o =>
+            {
+                Options.Add(new ProfileOptionView()
+                {
+                    Title = o.Title,
+                    Description = o.Description,
+                    Value = o.Value
+                });
+            });
+        }
     }
 }

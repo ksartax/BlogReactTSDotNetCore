@@ -50,6 +50,15 @@ export default class HomeService extends React.Component<{}, {}> {
                     responseData.titleUrl
                 );
 
+                var e = document.getElementById('new-grid');
+                if (e != null) {
+                    e.style.backgroundRepeat = 'no-repeat';
+                    e.style.backgroundSize = 'cover';
+                    e.style.backgroundPosition = 'center center';
+                    e.style.opacity = '0.7';
+                    e.style.backgroundImage = "url('" + _post.ImgPath + "')";
+                }
+
                 context.setState({
                     postNew: _post
                 });
@@ -64,7 +73,7 @@ export default class HomeService extends React.Component<{}, {}> {
         context.setState({
             loaderPosts: true
         })
-        this.config.get("Article?page=" + page + "&limit=6")
+        this.config.get("Article?page=" + page + "&limit=6" + "&sort=DESC")
             .then(function (response) {
                 return response.json();
             })
@@ -92,12 +101,14 @@ export default class HomeService extends React.Component<{}, {}> {
                     _posts.push(_post);
                 }
 
+                document.title = 'Blog Damian Stępniak';
+
                 context.setState({
                     postsRight: _posts.splice(0, _posts.length/2),
                     postsLeft: _posts.splice(_posts.length / 2 - 1, _posts.length),
                     loaderPosts: false,
-                    pageIndex: responseData.pageIndex,
-                    totalPage: responseData.totalPages,
+                    pageIndex: responseData.parameters.index,
+                    totalPage: responseData.parameters.totalIndex,
                 });
             })
             .catch(function (err) {

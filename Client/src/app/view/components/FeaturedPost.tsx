@@ -8,13 +8,7 @@ export default class FeaturedPost  extends React.Component<{ post: Post }, {}> {
     render() {
         return (
             <div>
-                <Grid columns={1} divided relaxed stackable textAlign='center' style={{
-                    backgroundImage: "url('http://tlo-na-fb.pl/images/thumbs/6cfa8e32b65015dd763c6b354a8e0f87.png')",
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center center',
-                    opacity: '0.7'
-                }}>
+                <Grid columns={1} divided relaxed stackable textAlign='center' id='new-grid'>
                     <Grid.Column>
                         <Header as='h2' icon='star' content='Wyróżniony Post' size='tiny' style={{
                             marginTop: '0.5em'

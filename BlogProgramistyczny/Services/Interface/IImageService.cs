@@ -1,8 +1,8 @@
-﻿using BlogProgramistyczny.Entites;
+﻿using BlogProgramistyczny.ModelView.Image;
 
 namespace BlogProgramistyczny.Services.Interface
 {
-    public interface IImageService : IService<Image, Image>
+    public interface IImageService : IService<ImageView, ImageCreate, ImageUpdate>
     {
     }
 }

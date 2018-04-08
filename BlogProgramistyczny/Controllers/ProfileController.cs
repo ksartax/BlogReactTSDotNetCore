@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogProgramistyczny.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Profile")]
     public class ProfileController : Controller
     {
         private readonly IProfileService _profileService;
@@ -15,10 +14,13 @@ namespace BlogProgramistyczny.Controllers
             _profileService = profileService;
         }
 
-        [HttpGet]
+        [HttpGet("api/Profile")]
         public IActionResult Index()
         {
-            return new ResponseObjectResult(_profileService.List(1, 1, ""));
+            return new ResponseObjectResult(_profileService.List(new Helpers.Paginate.Parameters() {
+                Index = 1,
+                Size = 1
+            }));
         }
     }
 }

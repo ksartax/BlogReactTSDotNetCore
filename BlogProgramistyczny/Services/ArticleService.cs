@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using BlogProgramistyczny.ModelView.Article;
 using System.Linq;
 using BlogProgramistyczny.Helpers.Paginate;
-using BlogProgramistyczny.ModelView.ArticleComment;
 
 namespace BlogProgramistyczny.Services
 {
@@ -17,33 +16,8 @@ namespace BlogProgramistyczny.Services
 
         public ArticleService(IArticleRepository articleRepository, IFileService fileService)
         {
-            this._articleRepository = articleRepository;
-            this._fileService = fileService;
-        }
-
-        public ArticleCommentView AddComment(int id, ArticleCommentCreate articleCommentCreate)
-        {
-            var article = _articleRepository.Get(id);
-
-            article.Comments.Add(new ArticleComment()
-            {
-                Description = articleCommentCreate.Description,
-                Surname = articleCommentCreate.FirstName,
-                CreatedAt = DateTime.Now
-            });
-
-            if (!_articleRepository.Update(article))
-            {
-                return null;
-            }
-
-            var lastComment = article.Comments.Last();
-            return new ArticleCommentView() {
-                Date = lastComment.CreatedAt.ToString("dd-MM-yyyy"),
-                Description = lastComment.Description,
-                Surname = lastComment.Surname,
-                Id = lastComment.Id
-            };
+            _articleRepository = articleRepository;
+            _fileService = fileService;
         }
 
         public bool Delete(int id)
@@ -53,7 +27,7 @@ namespace BlogProgramistyczny.Services
 
         public ArticleView Get(int id)
         {
-            var article = this._articleRepository.Get(id);
+            var article = _articleRepository.Get(id);
             if (article == null)
             {
                 throw new Exception("Błąd brak artykułu");
@@ -62,68 +36,39 @@ namespace BlogProgramistyczny.Services
             return new ArticleView(article);
         }
 
-        public ArticleView Get(string id)
+        public ArticleView GetByUrl(string url)
         {
-            var article = this._articleRepository.Get(id);
+            var article = _articleRepository.GetByUrl(url);
             if (article == null)
             {
                 throw new Exception("Błąd brak artykułu");
             }
 
             return new ArticleView(article);
-        }
-
-        public ICollection<ArticleCommentView> GetComments(int id)
-        {
-            var article = this._articleRepository.Get(id);
-            var comments = new List<ArticleCommentView>();
-
-            article?.Comments?.Where(c => c.ArticleCommentId == 0).ToList().ForEach(c =>
-            {
-                comments.Add(new ArticleCommentView(c));
-            });
-
-            return comments;
         }
 
         public ArticleView GetNewArticle()
         {
-            var article = this._articleRepository
-                .List()
-                .OrderBy(a => a.CreatedAt)
-                .FirstOrDefault();
+            var article = _articleRepository.GetFirst();
             if (article == null)
             {
-                return null;
+                throw new Exception("Wystąpił błąd z pobieranie artykułu");
             }
 
             return new ArticleView(article);
         }
 
-        public PaginatedListMapped<ArticleView> List(int pageIndex, int pageSize, string sort)
+        public PaginatedView<ArticleView> List(Parameters parameters)
         {
-            var query = this._articleRepository.List().AsQueryable();
-            if (sort.Contains("desc"))
-            {
-                query = query.OrderByDescending(a => a.CreatedAt);
-            }
-
-            var articles = PaginatedList<Article>.Create(
-                    query,
-                    pageIndex,
-                    pageSize
-                );
+            var articles = _articleRepository.ListByPaginatedParameters(parameters).ToList();
+            parameters.Count = _articleRepository.Count();
 
             var articlesMapped = new List<ArticleView>();
-            articles.Items.ForEach(a => {
+            articles.ForEach(a => {
                 articlesMapped.Add(new ArticleView(a));
             });
 
-            return new PaginatedListMapped<ArticleView>() {
-                Items = articlesMapped,
-                PageIndex = articles.PageIndex,
-                TotalPages = articles.TotalPages
-            };
+            return new PaginatedView<ArticleView>(articlesMapped, parameters);
         }
 
         public bool Save(ArticleCreate value)
@@ -159,7 +104,7 @@ namespace BlogProgramistyczny.Services
             return _articleRepository.Save(article);
         }
 
-        public bool Update(int id, ArticleCreate value)
+        public bool Update(int id, ArticleUpdate value)
         {
             var articleUpdated = _articleRepository.Get(id);
             articleUpdated.Description = value.Description;

@@ -47,6 +47,8 @@ export default class AboutService extends React.Component<{}, {}> {
                     ));
                 }
 
+                document.title = 'O Mnie Damian Stępniak';
+
                 context.setState({
                     profil: _profil,
                     loaderProfile: false

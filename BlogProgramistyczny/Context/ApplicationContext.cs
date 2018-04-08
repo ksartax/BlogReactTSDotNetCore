@@ -25,6 +25,10 @@ namespace BlogProgramistyczny.Context
             this.SetArticleImageRelation(modelBuilder);
             this.SetArticleCommentRelation(modelBuilder);
             this.SetArticleCategoryRelation(modelBuilder);
+            this.SetCategoryRelation(modelBuilder);
+            this.SetImageRelation(modelBuilder);
+            this.SetProfileRelation(modelBuilder);
+            this.SetProfileOptionRelation(modelBuilder);
         }
     }
 }

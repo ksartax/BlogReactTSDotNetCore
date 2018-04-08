@@ -9,11 +9,11 @@ namespace BlogProgramistyczny.Entites
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Title { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Description { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Url { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

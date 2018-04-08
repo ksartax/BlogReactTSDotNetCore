@@ -2,7 +2,7 @@
 
 namespace BlogProgramistyczny.ModelView.Profil
 {
-    public class ProfilCreate
+    public class ProfilUpdate
     {
         public string Header { get; set; }
         public string Title { get; set; }

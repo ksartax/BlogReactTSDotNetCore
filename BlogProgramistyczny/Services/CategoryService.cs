@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BlogProgramistyczny.Services.Interface;
 using BlogProgramistyczny.Repository.Interface;
 using BlogProgramistyczny.Entites;
@@ -26,7 +25,7 @@ namespace BlogProgramistyczny.Services
             throw new NotImplementedException();
         }
 
-        public PaginatedListMapped<Category> List(int pageIndex, int pageSize, string sort)
+        public PaginatedView<Category> List(Parameters parameters)
         {
             throw new NotImplementedException();
         }

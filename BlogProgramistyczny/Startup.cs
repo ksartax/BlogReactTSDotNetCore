@@ -40,6 +40,7 @@ namespace BlogProgramistyczny
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IArticleCommentService, ArticleCommentService>();
 
             services.AddScoped<IFileService, FileService>();
             #endregion

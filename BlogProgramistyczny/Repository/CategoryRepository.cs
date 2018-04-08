@@ -9,53 +9,53 @@ namespace BlogProgramistyczny.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public readonly ApplicationContext _applicationContext;
+        private readonly ApplicationContext _applicationContext;
 
         public CategoryRepository(ApplicationContext applicationContext)
         {
-            this._applicationContext = applicationContext;
+            _applicationContext = applicationContext;
         }
 
         public Category Get(int id)
         {
-            return this._applicationContext.Categories.Where(p => p.Id == id).FirstOrDefault();
+            return _applicationContext.Categories.Where(p => p.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<Category> List()
         {
-            return this._applicationContext.Categories.ToArray();
+            return _applicationContext.Categories.ToList();
         }
 
         public bool Save(Category value)
         {
-            this._applicationContext.Categories.Add(value);
+            _applicationContext.Categories.Add(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Update(Category value)
         {
-            this._applicationContext.Categories.Update(value);
+            _applicationContext.Categories.Update(value);
 
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(Category value)
         {
-            this._applicationContext.Categories.Remove(value);
+            _applicationContext.Categories.Remove(value);
             
-            return (this._applicationContext.SaveChanges() >= 0);
+            return (_applicationContext.SaveChanges() >= 0);
         }
 
         public bool Delete(int id)
         {
-            var article = this.Get(id);
+            var article = Get(id);
             if (article == null)
             {
                 throw new Exception("Błąd podczas usówania, brak elementu o id : " + id);
             }
 
-            return this.Delete(article);
+            return Delete(article);
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using BlogProgramistyczny.Services.Interface;
 using BlogProgramistyczny.Repository.Interface;
-using BlogProgramistyczny.Entites;
 using BlogProgramistyczny.Helpers.Paginate;
+using BlogProgramistyczny.ModelView.Image;
 
 namespace BlogProgramistyczny.Services
 {
@@ -21,22 +20,22 @@ namespace BlogProgramistyczny.Services
             throw new NotImplementedException();
         }
 
-        public Image Get(int id)
+        public ImageView Get(int id)
         {
             throw new NotImplementedException();
         }
 
-        public PaginatedListMapped<Image> List(int pageIndex, int pageSize, string sort)
+        public PaginatedView<ImageView> List(Parameters parameters)
         {
             throw new NotImplementedException();
         }
 
-        public bool Save(Image value)
+        public bool Save(ImageCreate value)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(int id, Image value)
+        public bool Update(int id, ImageUpdate value)
         {
             throw new NotImplementedException();
         }

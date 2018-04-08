@@ -2,7 +2,7 @@
 
 namespace BlogProgramistyczny.Services.Interface
 {
-    public interface ICategoryService : IService<Category, Category>
+    public interface ICategoryService : IService<Category, Category, Category>
     {
     }
 }

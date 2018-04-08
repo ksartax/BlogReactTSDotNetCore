@@ -49,6 +49,8 @@ export default class PostViewService extends React.Component<{ match :any}, {}> 
                     responseData.titleUrl
                 );
 
+                document.title = _post.urlTitle;
+
                 context.setState({
                     post: _post,
                     loaderPost: false

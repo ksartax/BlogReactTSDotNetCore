@@ -7,13 +7,13 @@ namespace BlogProgramistyczny.Entites
 {
     public class Image
     {
-        [Key]
         public int Id { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public int Status { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public int Level { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Path { get; set; }
         public string Description { get; set; }
 

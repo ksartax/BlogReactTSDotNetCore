@@ -34,7 +34,6 @@ namespace BlogProgramistyczny.ModelView.ArticleComment
 
         public ArticleCommentView()
         {
-
         }
     }
 }

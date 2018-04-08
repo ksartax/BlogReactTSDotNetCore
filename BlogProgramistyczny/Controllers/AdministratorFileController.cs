@@ -3,7 +3,6 @@ using BlogProgramistyczny.Helpers;
 using BlogProgramistyczny.ModelView.File;
 using BlogProgramistyczny.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace BlogProgramistyczny.Controllers
 {
@@ -21,7 +20,7 @@ namespace BlogProgramistyczny.Controllers
         {
             if (model == null)
             {
-                throw new ApiException("Błąd");
+                throw new ApiException("Błąd parametrów");
             }
 
             var file = _fileService.Upload(path, model, path);

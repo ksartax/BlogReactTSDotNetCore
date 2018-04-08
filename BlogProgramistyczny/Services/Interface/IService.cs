@@ -2,12 +2,12 @@
 
 namespace BlogProgramistyczny.Services.Interface
 {
-    public interface IService<V,C>
+    public interface IService<V,C,U>
     {
-        PaginatedListMapped<C> List(int pageIndex, int pageSize, string sort);
-        C Get(int id);
-        bool Save(V value);
-        bool Update(int id, V value);
+        PaginatedView<V> List(Parameters parameters);
+        V Get(int id);
+        bool Save(C value);
+        bool Update(int id, U value);
         bool Delete(int id);
     }
 }

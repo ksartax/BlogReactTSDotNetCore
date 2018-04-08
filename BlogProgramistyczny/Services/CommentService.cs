@@ -28,28 +28,17 @@ namespace BlogProgramistyczny.Services
             return _commentRepository.Delete(id);
         }
 
-        public PaginatedListMapped<ArticleCommentView> List(int pageIndex, int pageSize, string sort)
+        public PaginatedView<ArticleCommentView> List(Parameters parameters)
         {
-            var comments = PaginatedList<Entites.ArticleComment>.Create(
-                    _commentRepository.List()
-                    .Where(c => c.ArticleCommentId == 0)
-                    .AsQueryable(),
-                    pageIndex,
-                    pageSize
-                );
+            var comments = _commentRepository.ListByPaginatedParameters(parameters).ToList();
+            parameters.Count = _commentRepository.Count();
 
             var commentsMapped = new List<ArticleCommentView>();
-            foreach (var a in comments)
-            {
+            comments.ForEach(a => {
                 commentsMapped.Add(new ArticleCommentView(a, true));
-            }
+            });
 
-            return new PaginatedListMapped<ArticleCommentView>()
-            {
-                Items = commentsMapped,
-                PageIndex = comments.PageIndex,
-                TotalPages = comments.TotalPages
-            };
+            return new PaginatedView<ArticleCommentView>(commentsMapped, parameters);
         }
 
         public bool Replace(int id, ArticleCommentCreate articleCommentCreate)
@@ -69,17 +58,17 @@ namespace BlogProgramistyczny.Services
 
         public bool Save(ArticleCommentCreate value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public bool Update(int id, ArticleCommentCreate value)
+        public bool Update(int id, ArticleCommentUpdate value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public ArticleCommentView Get(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

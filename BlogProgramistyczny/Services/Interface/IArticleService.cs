@@ -1,15 +1,10 @@
-﻿using BlogProgramistyczny.Entites;
-using BlogProgramistyczny.ModelView.Article;
-using BlogProgramistyczny.ModelView.ArticleComment;
-using System.Collections.Generic;
+﻿using BlogProgramistyczny.ModelView.Article;
 
 namespace BlogProgramistyczny.Services.Interface
 {
-    public interface IArticleService : IService<ArticleCreate, ArticleView>
+    public interface IArticleService : IService<ArticleView, ArticleCreate, ArticleUpdate>
     {
         ArticleView GetNewArticle();
-        ArticleView Get(string id);
-        ArticleCommentView AddComment(int id, ArticleCommentCreate articleCommentCreate);
-        ICollection<ArticleCommentView> GetComments(int id);
+        ArticleView GetByUrl(string url);
     }
 }

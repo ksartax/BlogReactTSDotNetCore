@@ -8,17 +8,17 @@ namespace BlogProgramistyczny.Entites
 {
     public class ArticleComment
     {
-        [Key]
         public int Id { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Surname { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public string Description { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Pole nie może być puste")]
         public int ArticleId { get; set; }
         public virtual Article Article { get; set; }
 

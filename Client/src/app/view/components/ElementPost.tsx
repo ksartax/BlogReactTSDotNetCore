@@ -13,7 +13,7 @@ export class ElementPostCart extends React.Component<{ post: Post }, {}> {
                             <Header as='h2' icon='calendar' content={this.props.post.Date} size='tiny' />
                             <Card.Content textAlign='center'>
                                 <Card.Header style={{ paddingBottom: '1em' }}>
-                                    <NavLink onClick={() => console.log("ssssss")} style={{ color: 'black' }} to={"/view/" + this.props.post.urlTitle}>{this.props.post.Title}</NavLink>
+                                    <NavLink style={{ color: 'black' }} to={"/view/" + this.props.post.urlTitle}>{this.props.post.Title}</NavLink>
                                 </Card.Header>
                                 <Image src={this.props.post.ImgPath} style={{
                                     maxWidth: '100%',

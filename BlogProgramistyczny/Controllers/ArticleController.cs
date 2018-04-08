@@ -11,16 +11,22 @@ namespace BlogProgramistyczny.Controllers
     public class ArticleController : Controller
     {
         private readonly IArticleService _articleService;
+        private readonly IArticleCommentService _articleCommentService;
 
-        public ArticleController(IArticleService articleService)
+        public ArticleController(IArticleService articleService, IArticleCommentService articleCommentService)
         {
             _articleService = articleService;
+            _articleCommentService = articleCommentService;
         }
 
         [HttpGet, Route("api/Article")]
-        public IActionResult List([FromQuery(Name = "page")] string page, [FromQuery(Name = "limit")] string limit = "20", [FromQuery(Name = "sort")] string sort = "desc")
+        public IActionResult List([FromQuery(Name = "page")] int page, [FromQuery(Name = "limit")] int limit = 20, [FromQuery(Name = "sort")] string sort = "desc")
         {
-            return new ResponseObjectResult(this._articleService.List(Int16.Parse(page), Int16.Parse(limit), sort));
+            return new ResponseObjectResult(_articleService.List(new Helpers.Paginate.Parameters() {
+                Index = page,
+                Size = limit,
+                Sort = sort
+            }));
         }
 
         [HttpGet("api/Article/{url}")]
@@ -28,7 +34,7 @@ namespace BlogProgramistyczny.Controllers
         {
             try
             {
-                return new ResponseObjectResult(this._articleService.Get(url));
+                return new ResponseObjectResult(_articleService.GetByUrl(url));
             }
             catch (Exception e)
             {
@@ -41,7 +47,7 @@ namespace BlogProgramistyczny.Controllers
         {
             try
             {
-                return new ResponseObjectResult(this._articleService.GetComments(id));
+                return new ResponseObjectResult(_articleCommentService.Get(id));
             }
             catch (Exception e)
             {
@@ -52,7 +58,7 @@ namespace BlogProgramistyczny.Controllers
         [HttpGet("api/Article/New")]
         public IActionResult GetNewArticle()
         {
-            return new ResponseObjectResult(this._articleService.GetNewArticle());
+            return new ResponseObjectResult(_articleService.GetNewArticle());
         }
 
         [HttpPost("api/Article/{id}/Comment/Add")]
@@ -60,21 +66,20 @@ namespace BlogProgramistyczny.Controllers
         {
             if (articleCommentCreate == null)
             {
-                throw new ApiException("Błąd danych");
+                throw new ApiException("Błąd danych parametru");
             }
 
             if (!ModelState.IsValid)
             {
-                throw new ApiValidationException("");
+                throw new ApiValidationException("Walidacja");
             }
 
-            var articleComment = this._articleService.AddComment(id, articleCommentCreate);
-            if (articleComment == null) 
+            if (!_articleCommentService.Add(id, articleCommentCreate)) 
             {
                 throw new ApiException("Wystąpił bład podczas dodawania komentarza");
             }
 
-            return new ResponseObjectResult(articleComment);
+            return new ResponseObjectResult("Akcja wykonana porawnie");
         }
     }
 }
