@@ -2,7 +2,7 @@
 import Config from '../ApiConfig/Config';
 import Post from '../model/Post';
 
-export default class HomeService extends React.Component<{}, {}> {
+export default class HomeService extends React.Component<{ match?: any}, {}> {
     public config = new Config();
 
     state = {
@@ -12,7 +12,9 @@ export default class HomeService extends React.Component<{}, {}> {
         loaderNewPost: true,
         loaderPosts: true,
         pageIndex: 0,
-        totalPage: 0
+        totalPage: 0,
+        urlCategory: "",
+        totalArticle: -1
     };
 
     constructor(props: any) {
@@ -21,7 +23,17 @@ export default class HomeService extends React.Component<{}, {}> {
 
     componentDidMount() {
         this.loadNewPost();
-        this.loadPosts(1);
+
+        this.loadPosts(1, this.props.match.params.url);
+    }
+
+    componentWillReceiveProps(nextProps: any) {
+        this.setState({
+            loaderPosts: true,
+            urlCategory: nextProps.match.params.url
+        });
+
+        this.loadPosts(1, nextProps.match.params.url);
     }
 
     public loadNewPost() {
@@ -68,12 +80,14 @@ export default class HomeService extends React.Component<{}, {}> {
             });
     }
 
-    public loadPosts(page: number) {
+    public loadPosts(page: number, search?: string) {
         let context = this;
+        let _search = search ? search : '';
+
         context.setState({
             loaderPosts: true
         })
-        this.config.get("Article?page=" + page + "&limit=6" + "&sort=DESC")
+        this.config.get("Article?page=" + page + "&limit=6" + "&sort=DESC&searchCategory=" + _search)
             .then(function (response) {
                 return response.json();
             })
@@ -104,6 +118,7 @@ export default class HomeService extends React.Component<{}, {}> {
                 document.title = 'Blog Damian Stępniak';
 
                 context.setState({
+                    totalArticle: _posts.length,
                     postsRight: _posts.splice(0, _posts.length/2),
                     postsLeft: _posts.splice(_posts.length / 2 - 1, _posts.length),
                     loaderPosts: false,

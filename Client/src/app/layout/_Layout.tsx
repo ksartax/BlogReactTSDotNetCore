@@ -4,16 +4,21 @@ import { Container, Grid, Menu, Header } from 'semantic-ui-react'
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import Post from '../model/Post';
+import Category from '../model/Category';
+
 import Home from '../view/Home';
 import About from '../view/About';
 import PostView from '../view/PostView';
 import Footer from "../view/basic/Footer";
 import NotFound from "../view/basic/NotFound";
+import Config from '../ApiConfig/Config';
 
 export default class Layout extends React.Component {
+    public config = new Config();
 
     state = {
-        activeLink: window.location.pathname
+        activeLink: window.location.pathname,
+        categorys: Array<Category>()
     };
 
     constructor(props: any) {
@@ -55,6 +60,8 @@ export default class Layout extends React.Component {
                                     </Menu.Item>
                                 </NavLink>
                             </Menu>
+
+                            <NavCategory />
                         </div>
                         </Grid.Column>
 
@@ -69,6 +76,7 @@ export default class Layout extends React.Component {
                                     <Route exact path="/" component={Home} />
                                     <Route exact path="/o-mnie" component={About} />
                                     <Route exact path="/view/:use" component={PostView} />
+                                    <Route exact path="/category/:url" component={Home} />
                                     <Route exact component={NotFound} />
                                 </Switch>
                             </ScrollToTop>
@@ -93,5 +101,62 @@ class ScrollToTop extends React.Component {
 
     render() {
         return this.props.children
+    }
+}
+
+class NavCategory extends React.Component<{}, {}> {
+    public config = new Config();
+
+    state = {
+        categorys: Array<Category>()
+    };
+
+    componentDidMount() {
+        this.loadCategory();
+    }
+
+    public loadCategory() {
+        let context = this;
+
+        this.config.get("Category?page=1")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (response) {
+                if (response.code != 200) {
+                    return;
+                }
+
+                let _categories = new Array<Category>();
+                let responseData = response.responseData;
+                for (let po of responseData.items) {
+                    _categories.push(new Category(
+                        po.id,
+                        po.title,
+                        po.urlTitle
+                    ));
+                }
+
+                context.setState({
+                    categorys: _categories
+                });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
+    render() {
+       return <Menu vertical fluid>
+            {
+                this.state.categorys.map((value) => (
+                   <NavLink activeClassName='activeL' to={'/category/' + value.UrlTitle} >
+                        <Menu.Item link >
+                            {value.Name}
+                        </Menu.Item>
+                    </NavLink>
+                )
+            )}
+        </Menu>
     }
 }

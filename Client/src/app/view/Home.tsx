@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { Grid, Icon, Dimmer, Loader, Menu} from 'semantic-ui-react'
+import { Grid, Icon, Dimmer, Loader, Menu, Message} from 'semantic-ui-react'
 
 import FeaturedPost from './components/FeaturedPost';
 import { ElementPostCart } from './components/ElementPost';
@@ -23,6 +23,14 @@ export default class Home extends HomeService {
                         <FeaturedPost post={this.state.postNew} />
                     </Grid.Column>
                 </Grid>
+
+                {
+                    this.state.totalArticle == 0 ? (
+                        <Message warning>
+                            <Message.Header>Brak Artykułów</Message.Header>
+                        </Message>
+                    ) : ''
+                }
 
                 <Grid columns={2} container stackable style={{ minHeight: '300px'}}>
                     <Grid.Column style={{ paddingLeft: '0rem' }}>
@@ -61,14 +69,14 @@ export default class Home extends HomeService {
                 <hr/>
 
                 <Menu floated='right' pagination>
-                    <Menu.Item as='a' disabled={this.state.pageIndex == 1} icon onClick={() => {
-                        this.loadPosts(--this.state.pageIndex)
+                    <Menu.Item as='a' disabled={this.state.pageIndex == 1 || this.state.totalPage == 0} icon onClick={() => {
+                        this.loadPosts(--this.state.pageIndex, this.state.urlCategory)
                     }}>
                         <Icon name='chevron left' />
                     </Menu.Item>
 
-                    <Menu.Item as='a' icon disabled={this.state.pageIndex == this.state.totalPage} onClick={() => {
-                        this.loadPosts(++this.state.pageIndex)
+                    <Menu.Item as='a' icon disabled={this.state.pageIndex == this.state.totalPage || this.state.totalPage == 0} onClick={() => {
+                        this.loadPosts(++this.state.pageIndex, this.state.urlCategory)
                     }}>
                         <Icon name='chevron right' />
                     </Menu.Item>

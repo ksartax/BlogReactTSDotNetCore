@@ -1,4 +1,6 @@
-﻿export default class Profil {
+﻿import Config from '../ApiConfig/Config';
+
+export default class Profil {
 
     public Id: number;
     public Title: string;
@@ -11,7 +13,7 @@
         this.Id = id ? id : 0;
         this.Title = title ? title : '';
         this.Description = description ? description : '';
-        this.ImgPath = imgPath ? imgPath : '';
+        this.ImgPath = imgPath ? Config.API_FILE + imgPath : '';
         this.Header = header ? header : '';
 
         this.ProfileOptions = new Array<ProfileOption>();

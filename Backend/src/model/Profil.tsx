@@ -7,12 +7,14 @@ export class ProfilView {
     public Header: string;
     public ImgPath: string;
     public ProfileOptions: Array<ProfileOption>;
+    public ImgPathView: string;
 
     constructor(title?: string, description?: string, imgPath?: string, header?: string) {
         this.Title = title ? title : '';
         this.Description = description ? description : '';
         this.ImgPath = imgPath ? imgPath : '';
         this.Header = header ? header : '';
+        this.ImgPathView = imgPath ? Config.API_FILE + imgPath : '';
 
         this.ProfileOptions = new Array<ProfileOption>();
     }
@@ -44,18 +46,21 @@ export class ProfilUpdate {
     public Header: string;
     public ImgPath: string;
     public Options: Array<ProfileOptionUpdate>;
+    public ImgPathView: string;
 
     constructor(title?: string, description?: string, imgPath?: string, header?: string) {
         this.Title = title ? title : '';
         this.Description = description ? description : '';
         this.ImgPath = imgPath ? imgPath : '';
         this.Header = header ? header : '';
+        this.ImgPathView = imgPath ? Config.API_FILE + imgPath : '';
 
         this.Options = new Array<ProfileOptionUpdate>();
     }
 
     public setImgPath(val: string) {
-        this.ImgPath = Config.API_FILE + val + "?" + Math.random();
+        this.ImgPathView = Config.API_FILE + val + "?" + Math.random();
+        this.ImgPath = val;
     }
 
     public addProfileOption(profileOption: ProfileOptionUpdate) {

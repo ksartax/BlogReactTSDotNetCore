@@ -7,5 +7,6 @@
         public int Index { get; set; }
         public int TotalIndex { get; set; }
         public int Count { get; set; }
+        public string SearchCategory { get; set; }
     }
 }

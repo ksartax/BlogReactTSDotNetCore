@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using BlogProgramistyczny.Repository.Interface;
 using System.Linq;
+using BlogProgramistyczny.Helpers.Paginate;
+using BlogProgramistyczny.ModelView.Category;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProgramistyczny.Repository
 {
@@ -18,12 +21,40 @@ namespace BlogProgramistyczny.Repository
 
         public Category Get(int id)
         {
-            return _applicationContext.Categories.Where(p => p.Id == id).FirstOrDefault();
+            return _applicationContext.Categories
+                .Where(p => p.Id == id)
+                .Include(a => a.Articles)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Category> List()
         {
             return _applicationContext.Categories.ToList();
+        }
+
+        public IEnumerable<Category> ListByPaginatedParameters(Parameters parameters)
+        {
+            var query = _applicationContext.Categories.AsQueryable();
+
+            if (parameters.Sort != null)
+            {
+                switch (parameters.Sort)
+                {
+                    case "DESC":
+                        query = query.OrderByDescending(a => a.CreatedAt);
+                        break;
+                    case "ASC":
+                        query = query.OrderBy(a => a.CreatedAt);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return query.Skip(
+                (parameters.Index - 1) * parameters.Size)
+                .Take(parameters.Size)
+                .ToList();
         }
 
         public bool Save(Category value)
@@ -56,6 +87,11 @@ namespace BlogProgramistyczny.Repository
             }
 
             return Delete(article);
+        }
+
+        public int Count()
+        {
+            return _applicationContext.Categories.Count();
         }
     }
 }

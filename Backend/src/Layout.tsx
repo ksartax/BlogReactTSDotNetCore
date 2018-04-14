@@ -4,6 +4,7 @@ import { Menu, Grid } from 'semantic-ui-react'
 
 import Home from "./views/Home";
 import Articles from "./views/Articles";
+import Categories from "./views/Categories";
 import Coments from "./views/Coments";
 import Profiles from "./views/Profiles";
 import ArticleAdd from "./views/ArticleAdd";
@@ -48,6 +49,12 @@ export default class Layout extends React.Component<{},{}>
                                         </Menu.Item>
                                 </NavLink>
 
+                                <NavLink activeClassName='activeL' to="/category">
+                                    <Menu.Item link>
+                                        Kategorie
+                                        </Menu.Item>
+                                </NavLink>
+
                                 <NavLink activeClassName='activeL' to="/profiles">
                                     <Menu.Item link>
                                         Profil
@@ -67,6 +74,7 @@ export default class Layout extends React.Component<{},{}>
                             <Route exact path='/articles' component={Articles} />
                             <Route exact path='/articles/Add' component={ArticleAdd} />
                             <Route path="/comments" component={Coments} />
+                            <Route path="/category" component={Categories} />
                             <Route path="/profiles" component={Profiles} />
                         </div>
                         <div>

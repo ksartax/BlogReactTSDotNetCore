@@ -17,7 +17,8 @@ export default class Profiles extends React.Component<{}, {}>
         loadProfil: true,
         profilOption: new ProfileOptionUpdate(),
         editorState: EditorState.createEmpty(),
-        editText: ""
+        editText: "",
+        imgPath: ""
     };
 
     constructor(props: any) {
@@ -102,7 +103,7 @@ export default class Profiles extends React.Component<{}, {}>
         var f = new FormData();
         f.append("File", file);
        
-        this.config.postWithMultiple("File/Upload/profile", f)
+        this.config.postWithMultiple("File/Upload", f)
             .then(function (response) {
                 return response.json();
             })
@@ -138,7 +139,7 @@ export default class Profiles extends React.Component<{}, {}>
                             ) : ''
                         }
 
-                        <Item.Image src={this.state.profil.ImgPath} />
+                        <Item.Image src={this.state.profil.ImgPathView} />
                         <div></div>
                         <span>
                             <label htmlFor={'img'} style={{

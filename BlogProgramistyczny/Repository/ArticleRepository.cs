@@ -24,6 +24,8 @@ namespace BlogProgramistyczny.Repository
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
+                .Include(a => a.Categories)
+                    .ThenInclude(i => i.Category)
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
         }
@@ -34,6 +36,8 @@ namespace BlogProgramistyczny.Repository
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
+                .Include(a => a.Categories)
+                    .ThenInclude(i => i.Category)
                 .Where(a => a.Url.Contains(url))
                 .FirstOrDefault();
         }
@@ -44,6 +48,8 @@ namespace BlogProgramistyczny.Repository
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
+                .Include(a => a.Categories)
+                    .ThenInclude(i => i.Category)
                 .OrderByDescending(a => a.CreatedAt)
                 .FirstOrDefault();
         }
@@ -54,6 +60,8 @@ namespace BlogProgramistyczny.Repository
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
+                .Include(a => a.Categories)
+                    .ThenInclude(i => i.Category)
                 .ToList();
         }
 
@@ -63,7 +71,15 @@ namespace BlogProgramistyczny.Repository
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
+                .Include(category => category.Categories)
+                    .ThenInclude(i => i.Category)
                 .AsQueryable();
+
+            if (parameters.SearchCategory != null && !parameters.SearchCategory.Equals(""))
+            {
+                query = query
+                    .Where(category => category.Categories.Any(c => c.Category.UrlTitle.Equals(parameters.SearchCategory)));
+            }
 
             if (parameters.Sort != null)
             {
@@ -118,8 +134,15 @@ namespace BlogProgramistyczny.Repository
             return Delete(article);
         }
 
-        public int Count()
+        public int Count(Parameters parameters)
         {
+            if (parameters.SearchCategory != null && !parameters.SearchCategory.Equals(""))
+            {
+                return _applicationContext.Articles
+                    .Include(category => category.Categories)
+                    .Where(category => category.Categories.Any(c => c.Category.UrlTitle.Equals(parameters.SearchCategory))).Count();
+            }
+
             return _applicationContext.Articles.Count();
         }
     }

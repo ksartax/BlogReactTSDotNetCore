@@ -61,7 +61,7 @@ namespace BlogProgramistyczny.Services
         public PaginatedView<ArticleView> List(Parameters parameters)
         {
             var articles = _articleRepository.ListByPaginatedParameters(parameters).ToList();
-            parameters.Count = _articleRepository.Count();
+            parameters.Count = _articleRepository.Count(parameters);
 
             var articlesMapped = new List<ArticleView>();
             articles.ForEach(a => {
@@ -76,20 +76,32 @@ namespace BlogProgramistyczny.Services
             var images = new List<ArticleImage>();
             if (value.Images.Count > 0)
             {
-                var fileName = _fileService.Copy(value.Images.First().Path, value.Url.Replace(" ", "-"));
-                if (fileName != null)
+                var destination = value.Url.Replace(" ", "-");
+                foreach (var item in value.Images)
                 {
-                    var image = new ArticleImage()
+                    var fileName = _fileService.Copy(item.Path, destination);
+                    if (fileName == null)
+                    {
+                        continue;
+                    }
+
+                    images.Add(new ArticleImage()
                     {
                         Image = new Image()
                         {
                             Path = fileName,
                             CreatedAt = DateTime.Now
                         }
-                    };
-
-                    images.Add(image);
+                    });
                 }
+            }
+
+            var catehories = new List<ArticleCategory>();
+            foreach (var item in value.Categories)
+            {
+                catehories.Add(new ArticleCategory() {
+                    CategoryId = item
+                });
             }
 
             var article = new Article()
@@ -98,7 +110,8 @@ namespace BlogProgramistyczny.Services
                 Title = value.Title,
                 Url = value.Url,
                 CreatedAt = DateTime.Now,
-                Images = images
+                Images = images,
+                Categories = catehories
             };
 
             return _articleRepository.Save(article);
@@ -107,29 +120,51 @@ namespace BlogProgramistyczny.Services
         public bool Update(int id, ArticleUpdate value)
         {
             var articleUpdated = _articleRepository.Get(id);
+            if (articleUpdated == null)
+            {
+                throw new Exception("Brak artykółu");
+            }
+
             articleUpdated.Description = value.Description;
             articleUpdated.Title = value.Title;
             
-            var images = new List<ArticleImage>();
             if (value.Images.Count > 0)
             {
-                var fileName = _fileService.Copy(value.Images.First().Path, value.Url.Replace(" ", "-"));
-                if (fileName != null)
+                if (!articleUpdated.Images.Any(p => p.Image.Path.Equals(value.Images.First().Path)))
                 {
-                    var image = new ArticleImage()
+                    var destination = value.Url.Replace(" ", "-");
+
+                    _fileService.Clear(destination);
+
+                    foreach (var item in value.Images)
                     {
-                        Image = new Image()
+                        var fileName = _fileService.Copy(item.Path, destination);
+                        if (fileName == null)
                         {
-                            Path = fileName,
-                            CreatedAt = DateTime.Now
+                            continue;
                         }
-                    };
 
-                    images.Add(image);
-
-                    articleUpdated.Images = images;
+                        articleUpdated.Images.Add(new ArticleImage()
+                        {
+                            Image = new Image()
+                            {
+                                Path = fileName,
+                                CreatedAt = DateTime.Now
+                            }
+                        });
+                    }
                 }
             }
+
+            var category = new List<ArticleCategory>();
+            foreach (var item in value.Categories)
+            {
+                category.Add(new ArticleCategory()
+                {
+                    CategoryId = item
+                });
+            }
+            articleUpdated.Categories = category;
 
             return _articleRepository.Update(articleUpdated);
         }

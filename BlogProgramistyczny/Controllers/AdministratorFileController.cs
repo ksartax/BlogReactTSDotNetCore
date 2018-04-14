@@ -15,15 +15,15 @@ namespace BlogProgramistyczny.Controllers
             _fileService = fileService;
         }
 
-        [HttpPost("api/Administrator/File/Upload/{path}")]
-        public IActionResult UploadProfilImg(FileUploadViewModel model, string path)
+        [HttpPost("api/Administrator/File/Upload")]
+        public IActionResult UploadProfilImg(FileUploadCreateModel model)
         {
             if (model == null)
             {
                 throw new ApiException("Błąd parametrów");
             }
 
-            var file = _fileService.Upload(path, model, path);
+            var file = _fileService.Upload(model);
             if (file == null)
             {
                 throw new ApiException("Bład");

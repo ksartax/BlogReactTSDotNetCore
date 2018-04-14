@@ -1,4 +1,5 @@
 ﻿using BlogProgramistyczny.ModelView.ArticleComment;
+using BlogProgramistyczny.ModelView.Category;
 using BlogProgramistyczny.ModelView.Image;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace BlogProgramistyczny.ModelView.Article
         public ImageView Image { get; set; }
         public string TitleUrl { get; set; }
 
+        public virtual ICollection<CategoryView> Categories { get; set; }
         public virtual ICollection<ArticleCommentView> Comments { get; set; }
 
         public ArticleView() { }
@@ -31,6 +33,12 @@ namespace BlogProgramistyczny.ModelView.Article
             {
                 Path = article.Images?.FirstOrDefault()?.Image?.Path
             };
+
+            Categories = new List<CategoryView>();
+            foreach (var item in article.Categories)
+            {
+                Categories.Add(new CategoryView(item.Category));
+            }
         }
     }
 }

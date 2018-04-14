@@ -9,6 +9,6 @@ namespace BlogProgramistyczny.Repository.Interface
         Article GetByUrl(string url);
         Article GetFirst();
         IEnumerable<Article> ListByPaginatedParameters(Parameters parameters);
-        int Count();
+        int Count(Parameters parameters);
     }
 }

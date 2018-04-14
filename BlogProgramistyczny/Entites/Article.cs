@@ -19,8 +19,8 @@ namespace BlogProgramistyczny.Entites
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }
 
-        public virtual ICollection<ArticleCategory> Categories { get; set; }
+        public virtual ICollection<ArticleCategory> Categories { get; set; } = new List<ArticleCategory>();
         public virtual ICollection<ArticleComment> Comments { get; set; }
-        public virtual ICollection<ArticleImage> Images { get; set; }
+        public virtual ICollection<ArticleImage> Images { get; set; } = new List<ArticleImage>();
     }
 }

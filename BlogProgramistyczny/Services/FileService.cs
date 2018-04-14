@@ -1,6 +1,7 @@
 ﻿using BlogProgramistyczny.ModelView.File;
 using BlogProgramistyczny.Services.Interface;
 using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -13,6 +14,18 @@ namespace BlogProgramistyczny.Services
         public FileService(IHostingEnvironment env)
         {
             _env = env;
+        }
+
+        public void Clear(string source)
+        {
+            string _path = Path.Combine(_env.WebRootPath, source);
+            if (Directory.Exists(_path))
+            {
+                foreach (FileInfo file in (new DirectoryInfo(_path)).EnumerateFiles())
+                {
+                    file.Delete();
+                }
+            }
         }
 
         public string Copy(string source, string destination)
@@ -42,35 +55,38 @@ namespace BlogProgramistyczny.Services
             return destination + "/" + sourceFileName;
         }
 
-        public FileUploadViewModel Upload(string path, FileUploadViewModel fileUploadViewModel, string fileNameDefault = null)
+        public FileUploadViewModel Upload(FileUploadCreateModel fileUploadViewModel)
         {
-            var file = fileUploadViewModel.File;
-            var fileName = file.FileName;
-
-            if (fileNameDefault != null)
+            if (fileUploadViewModel.File.Length < 0)
             {
-                fileName = fileNameDefault + "." + fileName.Split(".")[1];
+                return null;
             }
 
-            if (file.Length > 0)
+            string _path = Path.Combine(_env.WebRootPath, "uploadFiles");
+            if (!Directory.Exists(_path))
             {
-                string _path = Path.Combine(_env.WebRootPath, path);
-
-                if (!Directory.Exists(_path))
+                Directory.CreateDirectory(_path);
+            }
+            else
+            {
+                foreach (FileInfo file in (new DirectoryInfo(_path)).EnumerateFiles())
                 {
-                    Directory.CreateDirectory(_path);
+                    file.Delete();
                 }
-                
-                using (var fs = new FileStream(Path.Combine(_path, fileName), FileMode.Create))
-                {
-                    file.CopyTo(fs);
-                }
-
-                fileUploadViewModel.Source = $"/{path}/{fileName}";
-                fileUploadViewModel.Extension = Path.GetExtension(fileName).Substring(1);
             }
 
-            return fileUploadViewModel;
+            var fileName = (new Random()).Next() + "." + Path.GetExtension(fileUploadViewModel.File.FileName).Substring(1);
+            using (var fs = new FileStream(Path.Combine(_path, fileName), FileMode.Create))
+            {
+                fileUploadViewModel.File.CopyTo(fs);
+            }
+
+            return new FileUploadViewModel() {
+                Extension = Path.GetExtension(fileName).Substring(1),
+                Height = fileUploadViewModel.Height,
+                Size = fileUploadViewModel.Size,
+                Source = $"/uploadFiles/{fileName}"
+            };
         }
     }
 }

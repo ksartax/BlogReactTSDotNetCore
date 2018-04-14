@@ -23,7 +23,7 @@ export default class ProfilViewModel extends React.Component<{ profil: ProfilUpd
                         <Segment>
                             <Item.Group relaxed>
                                 <Item>
-                                    <Item.Image src={this.props.profil.ImgPath} />
+                                    <Item.Image src={this.props.profil.ImgPathView} />
                                     <Item.Content>
                                         <Item.Header>
                                             {this.props.profil.Title}

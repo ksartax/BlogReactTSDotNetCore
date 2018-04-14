@@ -22,6 +22,8 @@ namespace BlogProgramistyczny.Repository
         {
             return _applicationContext.ArticleComments
                 .Include(a => a.Article)
+                    .ThenInclude(a => a.Categories)
+                        .ThenInclude(a => a.Category)
                 .Include(a => a.Comments)
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
@@ -31,6 +33,8 @@ namespace BlogProgramistyczny.Repository
         {
             return _applicationContext.ArticleComments
                 .Include(a => a.Article)
+                    .ThenInclude(a => a.Categories)
+                        .ThenInclude(a => a.Category)
                 .Include(a => a.Comments)
                 .ToList();
         }
@@ -39,6 +43,8 @@ namespace BlogProgramistyczny.Repository
         {
             var query = _applicationContext.ArticleComments
                 .Include(a => a.Article)
+                    .ThenInclude(a => a.Categories)
+                        .ThenInclude(a => a.Category)
                 .Include(a => a.Comments)
                 .Where(c => c.ArticleCommentId == 0)
                 .AsQueryable();

@@ -1,7 +1,10 @@
-﻿namespace BlogProgramistyczny.ModelView.File
+﻿using Microsoft.AspNetCore.Http;
+
+namespace BlogProgramistyczny.ModelView.File
 {
-    public class FileUploadViewModel
+    public class FileUploadCreateModel
     {
+        public IFormFile File { get; set; }
         public string Source { get; set; }
         public long Size { get; set; }
         public int Width { get; set; }

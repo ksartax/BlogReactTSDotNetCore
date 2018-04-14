@@ -1,8 +1,8 @@
-﻿using BlogProgramistyczny.Entites;
+﻿using BlogProgramistyczny.ModelView.Category;
 
 namespace BlogProgramistyczny.Services.Interface
 {
-    public interface ICategoryService : IService<Category, Category, Category>
+    public interface ICategoryService : IService<CategoryView, CategoryCreate, CategoryCreate>
     {
     }
 }

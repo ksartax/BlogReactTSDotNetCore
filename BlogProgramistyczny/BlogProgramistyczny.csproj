@@ -6,16 +6,12 @@
 
   <ItemGroup>
     <Compile Remove="Migrations\**" />
-    <Compile Remove="ModelView\Category\**" />
     <Compile Remove="ModelView\Option\**" />
     <Content Remove="Migrations\**" />
-    <Content Remove="ModelView\Category\**" />
     <Content Remove="ModelView\Option\**" />
     <EmbeddedResource Remove="Migrations\**" />
-    <EmbeddedResource Remove="ModelView\Category\**" />
     <EmbeddedResource Remove="ModelView\Option\**" />
     <None Remove="Migrations\**" />
-    <None Remove="ModelView\Category\**" />
     <None Remove="ModelView\Option\**" />
   </ItemGroup>
 

@@ -1,8 +1,10 @@
 ﻿using System;
 using BlogProgramistyczny.Services.Interface;
 using BlogProgramistyczny.Repository.Interface;
-using BlogProgramistyczny.Entites;
 using BlogProgramistyczny.Helpers.Paginate;
+using BlogProgramistyczny.ModelView.Category;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace BlogProgramistyczny.Services
 {
@@ -12,30 +14,55 @@ namespace BlogProgramistyczny.Services
 
         public CategoryService(ICategoryRepository categoryRepository)
         {
-            this._categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var category = _categoryRepository.Get(id);
+            if (category == null)
+            {
+                throw new Exception("Błąd, brak kategorii");
+            }
+
+            return _categoryRepository.Delete(category);
         }
 
-        public Category Get(int id)
+        public CategoryView Get(int id)
         {
-            throw new NotImplementedException();
+            var category = _categoryRepository.Get(id);
+            if (category == null)
+            {
+                throw new Exception("Błąd, brak kategorii");
+            }
+
+            return new CategoryView(category);
         }
 
-        public PaginatedView<Category> List(Parameters parameters)
+        public PaginatedView<CategoryView> List(Parameters parameters)
         {
-            throw new NotImplementedException();
+            var category = _categoryRepository.ListByPaginatedParameters(parameters).ToList();
+            parameters.Count = _categoryRepository.Count();
+
+            var categoryMapped = new List<CategoryView>();
+            category.ForEach(a => {
+                categoryMapped.Add(new CategoryView(a));
+            });
+
+            return new PaginatedView<CategoryView>(categoryMapped, parameters);
         }
 
-        public bool Save(Category value)
+        public bool Save(CategoryCreate value)
         {
-            throw new NotImplementedException();
+            return _categoryRepository.Save(new Entites.Category(value)
+            {
+                CreatedAt = DateTime.Now,
+                Level = 0,
+                Status = 1
+            });
         }
 
-        public bool Update(int id, Category value)
+        public bool Update(int id, CategoryCreate value)
         {
             throw new NotImplementedException();
         }

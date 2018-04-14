@@ -9,6 +9,7 @@ namespace BlogProgramistyczny.ModelView.Article
         public string Description { get; set; }
         public string Url { get; set; }
 
+        public virtual ICollection<int> Categories { get; set; }
         public virtual ICollection<ImageCreate> Images { get; set; }
     }
 }

@@ -15,7 +15,9 @@ namespace BlogProgramistyczny.Helpers.Paginate
                 Index = parameters.Index,
                 Size = parameters.Size,
                 Sort = parameters.Sort,
-                TotalIndex = (int)Math.Ceiling(parameters.Count / (double)parameters.Size)
+                TotalIndex = (int)Math.Ceiling(parameters.Count / (double)parameters.Size),
+                Count = parameters.Count,
+                SearchCategory = parameters.SearchCategory
             };
 
             Items = items;

@@ -62,6 +62,7 @@
     <Content Include="package.json" />
     <TypeScriptCompile Include="src\app\ApiConfig\Config.tsx" />
     <TypeScriptCompile Include="src\app\index.tsx" />
+    <TypeScriptCompile Include="src\app\model\Category.tsx" />
     <TypeScriptCompile Include="src\app\model\Profil.tsx" />
     <TypeScriptCompile Include="src\app\service\HomeService.tsx" />
     <TypeScriptCompile Include="src\app\service\AboutService.tsx" />

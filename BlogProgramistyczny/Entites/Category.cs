@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlogProgramistyczny.ModelView.Category;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,10 +18,20 @@ namespace BlogProgramistyczny.Entites
         public string Title { get; set; }
 
         public string Description { get; set; }
+        public string UrlTitle { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }
 
         public virtual ICollection<ArticleCategory> Articles { get; set; }
+
+        public Category() { }
+
+        public Category(CategoryCreate categoryCreate)
+        {
+            Title = categoryCreate.Title;
+            Description = categoryCreate.Description;
+            UrlTitle = categoryCreate.UrlTitle;
+        }
     }
 }

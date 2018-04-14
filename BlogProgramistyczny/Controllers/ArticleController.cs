@@ -20,12 +20,13 @@ namespace BlogProgramistyczny.Controllers
         }
 
         [HttpGet, Route("api/Article")]
-        public IActionResult List([FromQuery(Name = "page")] int page, [FromQuery(Name = "limit")] int limit = 20, [FromQuery(Name = "sort")] string sort = "desc")
+        public IActionResult List([FromQuery(Name = "page")] int page, [FromQuery(Name = "limit")] int limit = 20, [FromQuery(Name = "sort")] string sort = "desc", [FromQuery(Name = "searchCategory")] string searchCategory = "")
         {
             return new ResponseObjectResult(_articleService.List(new Helpers.Paginate.Parameters() {
                 Index = page,
                 Size = limit,
-                Sort = sort
+                Sort = sort,
+                SearchCategory = searchCategory
             }));
         }
 

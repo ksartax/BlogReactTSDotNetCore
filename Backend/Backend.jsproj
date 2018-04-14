@@ -42,9 +42,11 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="src\index.html" />
+    <TypeScriptCompile Include="src\components\CategoryCreateModel.tsx" />
     <TypeScriptCompile Include="src\components\ArticleEditModel.tsx" />
     <TypeScriptCompile Include="src\components\CommentReplace.tsx" />
     <TypeScriptCompile Include="src\components\ArticleViewModel.tsx" />
+    <TypeScriptCompile Include="src\model\Category.tsx" />
     <TypeScriptCompile Include="src\views\ArticleAdd.tsx" />
     <Content Include="tsconfig.json" />
     <Content Include="webpack.config.js" />
@@ -60,6 +62,7 @@
     <TypeScriptCompile Include="src\model\Article.tsx" />
     <TypeScriptCompile Include="src\model\Comment.tsx" />
     <TypeScriptCompile Include="src\model\Profil.tsx" />
+    <TypeScriptCompile Include="src\views\Categories.tsx" />
     <TypeScriptCompile Include="src\views\Profiles.tsx" />
     <TypeScriptCompile Include="src\views\Coments.tsx" />
     <TypeScriptCompile Include="src\views\Articles.tsx" />

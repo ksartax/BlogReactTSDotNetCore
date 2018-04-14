@@ -1,20 +1,19 @@
 ﻿import * as React from "react";
 import { Segment, Table, Label, Menu, Icon, Button, Select, Dimmer, Loader} from 'semantic-ui-react';
 import Config from '../../ApiConfig/Config';
-import { ArticleView } from '../model/Article';
+import { CategoryView } from '../model/Category';
+import CategoryCreateModel from '../components/CategoryCreateModel';
 import {
     Link,
 } from "react-router-dom";
-import ArticleEditModel from '../components/ArticleEditModel'
-import { CategoryView } from '../model/Category';
 
-export default class Articles extends React.Component<{}, {}>
+export default class Categories extends React.Component<{}, {}>
 {
     public config = new Config();
 
     state = {
-        articles: Array<ArticleView>(),
-        loaderArticles: true,
+        categories: Array<CategoryView>(),
+        loaderCategory: true,
         pageIndex: 0,
         totalPage: 0
     };
@@ -24,57 +23,64 @@ export default class Articles extends React.Component<{}, {}>
     }
 
     componentDidMount() {
-        this.loadArticles(1);
+        this.loadCategory(1);
     }
 
-    public loadArticles(page: number) {
+    public loadCategory(page: number) {
         let context = this;
         context.setState({
-            loaderArticles: true
+            loaderCategory: true
         });
-        this.config.get("Article?page=" + page + "&limit=10")
+        this.config.get("Category?page=" + page + "&limit=10")
             .then(function (response) {
                 return response.json();
             })
             .then(function (response) {
                 context.setState({
-                    loaderArticles: false
+                    loaderCategory: false
                 });
 
                 if (response.code != 200) {
 
                 }
 
-                let _articles = new Array<ArticleView>();
+                let _categories = new Array<CategoryView>();
                 let responseData = response.responseData;
                 for (let po of responseData.items) {
-                    let _article = new ArticleView (
+                    let _category = new CategoryView (
                         po.id,
                         po.title,
                         po.description,
-                        po.date,
-                        po.image.path,
-                        po.titleUrl
+                        po.urlTitle
                     );
 
-                    if (po.categories.length != 0) {
-                        for (let category of po.categories) {
-                            _article.Categories.push(new CategoryView(
-                                category.id,
-                                category.id,
-                                category.title
-                            ));
-                        }
-                    }
-                    
-                    _articles.push(_article);
+                    _categories.push(_category);
                 }
 
                 context.setState({
                     pageIndex: responseData.parameters.index,
                     totalPage: responseData.parameters.totalIndex,
-                    articles: _articles
+                    categories: _categories
                 });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
+    public dellCategory(id: number) {
+        let context = this;
+
+         this.config.get(`Category/${id}/Remove`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (response) {
+                if (response.code != 200) {
+
+                }
+
+                context.loadCategory(context.state.pageIndex);
             })
             .catch(function (err) {
                 console.log(err);
@@ -85,24 +91,21 @@ export default class Articles extends React.Component<{}, {}>
         return (
             <Segment stacked>
                 
-                <Link to="/articles/Add">
-                    <Button primary>
-                        Dodaj
-                    </Button>
-                </Link>
+                <CategoryCreateModel categories={this}/>
 
                 <Table celled>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Id</Table.HeaderCell>
                             <Table.HeaderCell>Tytuł</Table.HeaderCell>
+                            <Table.HeaderCell>Url</Table.HeaderCell>
                             <Table.HeaderCell>Akcja</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
                         {
-                            this.state.loaderArticles == true ? (
+                            this.state.loaderCategory == true ? (
                                 <Dimmer active inverted>
                                     <Loader size='medium'>Ładowanie</Loader>
                                 </Dimmer>
@@ -110,12 +113,13 @@ export default class Articles extends React.Component<{}, {}>
                         }
 
                         {
-                            this.state.articles.map((article) => (
+                            this.state.categories.map((category) => (
                                 <Table.Row>
-                                    <Table.Cell>{article.Id}</Table.Cell>
-                                    <Table.Cell>{article.Title}</Table.Cell>
+                                    <Table.Cell>{category.Id}</Table.Cell>
+                                    <Table.Cell>{category.Title}</Table.Cell>
+                                    <Table.Cell>{category.UrlTitle}</Table.Cell>
                                     <Table.Cell width={2}>
-                                        <ArticleEditModel articleEdit={article}/>
+                                        <Button onClick={this.dellCategory.bind(this, category.Id)} content='Wykasuj' negative /> 
                                     </Table.Cell>
                                 </Table.Row>  
                             )
@@ -124,16 +128,16 @@ export default class Articles extends React.Component<{}, {}>
 
                     <Table.Footer>
                         <Table.Row>
-                            <Table.HeaderCell colSpan='3'>
+                            <Table.HeaderCell colSpan='4'>
                                 <Menu floated='right' pagination>
                                     <Menu.Item as='a' disabled={this.state.pageIndex == 1} icon onClick={() => {
-                                        this.loadArticles(--this.state.pageIndex)
+                                        this.loadCategory(--this.state.pageIndex)
                                     }}>
                                         <Icon name='chevron left' />
                                     </Menu.Item>
 
-                                    <Menu.Item as='a' icon disabled={this.state.pageIndex == this.state.totalPage} onClick={() => {
-                                        this.loadArticles(++this.state.pageIndex)
+                                    <Menu.Item as='a' icon disabled={this.state.pageIndex >= this.state.totalPage} onClick={() => {
+                                        this.loadCategory(++this.state.pageIndex)
                                     }}>
                                         <Icon name='chevron right' />
                                     </Menu.Item>

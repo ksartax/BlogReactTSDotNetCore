@@ -27,7 +27,7 @@ namespace BlogProgramistyczny.Services
 
             article.Comments.Add(new ArticleComment(articleCommentCreate));
 
-            return !_articleRepository.Update(article);
+            return _articleRepository.Update(article);
         }
 
         public ICollection<ArticleCommentView> Get(int id)
