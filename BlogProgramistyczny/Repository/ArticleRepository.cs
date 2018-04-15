@@ -18,62 +18,46 @@ namespace BlogProgramistyczny.Repository
             _applicationContext = applicationContext;
         }
 
-        public Article Get(int id)
+        private IQueryable<Article> GetQueryable()
         {
             return _applicationContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.Images)
                     .ThenInclude(i => i.Image)
                 .Include(a => a.Categories)
-                    .ThenInclude(i => i.Category)
+                    .ThenInclude(i => i.Category);
+        }
+
+        public Article Get(int id)
+        {
+            return GetQueryable()
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
         }
 
         public Article GetByUrl(string url)
         {
-            return _applicationContext.Articles
-                .Include(a => a.Comments)
-                .Include(a => a.Images)
-                    .ThenInclude(i => i.Image)
-                .Include(a => a.Categories)
-                    .ThenInclude(i => i.Category)
+            return GetQueryable()
                 .Where(a => a.Url.Contains(url))
                 .FirstOrDefault();
         }
 
         public Article GetFirst()
         {
-            return _applicationContext.Articles
-                .Include(a => a.Comments)
-                .Include(a => a.Images)
-                    .ThenInclude(i => i.Image)
-                .Include(a => a.Categories)
-                    .ThenInclude(i => i.Category)
+            return GetQueryable()
                 .OrderByDescending(a => a.CreatedAt)
                 .FirstOrDefault();
         }
 
         public IEnumerable<Article> List()
         {
-            return _applicationContext.Articles
-                .Include(a => a.Comments)
-                .Include(a => a.Images)
-                    .ThenInclude(i => i.Image)
-                .Include(a => a.Categories)
-                    .ThenInclude(i => i.Category)
+            return GetQueryable()
                 .ToList();
         }
 
         public IEnumerable<Article> ListByPaginatedParameters(Parameters parameters)
         {
-            var query = _applicationContext.Articles
-                .Include(a => a.Comments)
-                .Include(a => a.Images)
-                    .ThenInclude(i => i.Image)
-                .Include(category => category.Categories)
-                    .ThenInclude(i => i.Category)
-                .AsQueryable();
+            var query = GetQueryable();
 
             if (parameters.SearchCategory != null && !parameters.SearchCategory.Equals(""))
             {

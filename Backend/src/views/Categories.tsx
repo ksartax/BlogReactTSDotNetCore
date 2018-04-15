@@ -10,7 +10,7 @@ import {
 export default class Categories extends React.Component<{}, {}>
 {
     public config = new Config();
-
+    
     state = {
         categories: Array<CategoryView>(),
         loaderCategory: true,

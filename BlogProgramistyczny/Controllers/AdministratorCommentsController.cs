@@ -2,12 +2,13 @@
 using BlogProgramistyczny.Helpers;
 using BlogProgramistyczny.ModelView.ArticleComment;
 using BlogProgramistyczny.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace BlogProgramistyczny.Controllers
 {
-    [Produces("application/json")]
+    [Produces("application/json"), Authorize]
     public class AdministratorCommentsController : Controller
     {
         private readonly ICommentService _commentService;

@@ -2,11 +2,12 @@
 using BlogProgramistyczny.Helpers;
 using BlogProgramistyczny.ModelView.Profil;
 using BlogProgramistyczny.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProgramistyczny.Controllers
 {
-    [Produces("application/json")]
+    [Produces("application/json"), Authorize]
     public class AdministratorProfileController : Controller
     {
         private readonly IProfileService _profileService;

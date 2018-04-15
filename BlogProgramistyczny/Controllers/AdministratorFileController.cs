@@ -2,10 +2,12 @@
 using BlogProgramistyczny.Helpers;
 using BlogProgramistyczny.ModelView.File;
 using BlogProgramistyczny.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProgramistyczny.Controllers
 {
+    [Authorize]
     public class AdministratorFileController : Controller
     {
         private readonly IFileService _fileService;

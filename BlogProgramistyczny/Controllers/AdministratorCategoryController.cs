@@ -2,12 +2,13 @@
 using BlogProgramistyczny.Helpers;
 using BlogProgramistyczny.ModelView.Category;
 using BlogProgramistyczny.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace BlogProgramistyczny.Controllers
 {
-    [Produces("application/json")]
+    [Produces("application/json"), Authorize]
     public class AdministratorCategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
