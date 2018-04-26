@@ -117,6 +117,19 @@ namespace BlogProgramistyczny.Services
             return _articleRepository.Save(article);
         }
 
+        public IEnumerable<ArticleView> SearchedList(string s)
+        {
+            var articles = _articleRepository.SearchArticles(s);
+            var mappedArticles = new List<ArticleView>();
+
+            foreach (var item in articles)
+            {
+                mappedArticles.Add(new ArticleView(item));
+            }
+
+            return mappedArticles;
+        }
+
         public bool Update(int id, ArticleUpdate value)
         {
             var articleUpdated = _articleRepository.Get(id);

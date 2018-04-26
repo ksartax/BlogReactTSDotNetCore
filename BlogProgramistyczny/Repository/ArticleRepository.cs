@@ -129,5 +129,13 @@ namespace BlogProgramistyczny.Repository
 
             return _applicationContext.Articles.Count();
         }
+
+        public IEnumerable<Article> SearchArticles(string s)
+        {
+            return _applicationContext.Articles
+                .Include(a => a.Images)
+                    .ThenInclude(i => i.Image)
+                .Where(a => a.Url.Contains(s) || a.Title.Contains(s));
+        }
     }
 }

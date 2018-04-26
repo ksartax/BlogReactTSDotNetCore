@@ -14,7 +14,8 @@ export default class HomeService extends React.Component<{ match?: any}, {}> {
         pageIndex: 0,
         totalPage: 0,
         urlCategory: "",
-        totalArticle: -1
+        totalArticle: -1,
+        sort: "DESC"
     };
 
     constructor(props: any) {
@@ -25,6 +26,14 @@ export default class HomeService extends React.Component<{ match?: any}, {}> {
         this.loadNewPost();
 
         this.loadPosts(1, this.props.match.params.url);
+    }
+
+    public selectSort = (event: React.SyntheticEvent<HTMLDivElement>, data: any) => {
+        this.setState({
+            sort: data.value
+        })
+
+        this.loadPosts(1, '' , data.value);
     }
 
     componentWillReceiveProps(nextProps: any) {
@@ -80,14 +89,15 @@ export default class HomeService extends React.Component<{ match?: any}, {}> {
             });
     }
 
-    public loadPosts(page: number, search?: string) {
+    public loadPosts(page: number, search?: string, sort?: string) {
         let context = this;
         let _search = search ? search : '';
-
+        let _sort = sort ? sort : context.state.sort;
+        console.log(context.state.sort);
         context.setState({
             loaderPosts: true
         })
-        this.config.get("Article?page=" + page + "&limit=6" + "&sort=DESC&searchCategory=" + _search)
+        this.config.get("Article?page=" + page + "&limit=6" + "&sort=" + _sort + "&searchCategory=" + _search)
             .then(function (response) {
                 return response.json();
             })

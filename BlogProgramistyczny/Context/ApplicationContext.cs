@@ -1,6 +1,7 @@
 ﻿using BlogProgramistyczny.Context.Relations;
 using BlogProgramistyczny.Entites;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BlogProgramistyczny.Context
 {

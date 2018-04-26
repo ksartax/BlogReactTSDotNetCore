@@ -30,6 +30,12 @@ namespace BlogProgramistyczny.Controllers
             }));
         }
 
+        [HttpGet, Route("api/Article/s/")]
+        public IActionResult Search([FromQuery(Name = "s")] string search = "")
+        {
+            return new ResponseObjectResult(_articleService.SearchedList(search));
+        }
+
         [HttpGet("api/Article/{url}")]
         public IActionResult Article(string url)
         {

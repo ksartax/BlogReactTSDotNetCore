@@ -10,5 +10,6 @@ namespace BlogProgramistyczny.Repository.Interface
         Article GetFirst();
         IEnumerable<Article> ListByPaginatedParameters(Parameters parameters);
         int Count(Parameters parameters);
+        IEnumerable<Article> SearchArticles(string s);
     }
 }

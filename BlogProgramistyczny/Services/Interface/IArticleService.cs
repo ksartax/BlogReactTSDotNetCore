@@ -1,4 +1,5 @@
 ﻿using BlogProgramistyczny.ModelView.Article;
+using System.Collections.Generic;
 
 namespace BlogProgramistyczny.Services.Interface
 {
@@ -6,5 +7,6 @@ namespace BlogProgramistyczny.Services.Interface
     {
         ArticleView GetNewArticle();
         ArticleView GetByUrl(string url);
+        IEnumerable<ArticleView> SearchedList(string s);
     }
 }

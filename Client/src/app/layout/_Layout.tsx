@@ -1,7 +1,8 @@
 ﻿import * as React from "react";
 import { NavLink,  Router ,Route, Switch} from 'react-router-dom'
-import { Container, Grid, Menu, Header } from 'semantic-ui-react'
+import { Container, Grid, Menu, Header, Input, Search } from 'semantic-ui-react'
 import createBrowserHistory from 'history/createBrowserHistory';
+import * as _ from 'lodash';
 
 import Post from '../model/Post';
 import Category from '../model/Category';
@@ -62,6 +63,8 @@ export default class Layout extends React.Component {
                             </Menu>
 
                             <NavCategory />
+                            <SearchComponent history={history}/>
+
                         </div>
                         </Grid.Column>
 
@@ -158,5 +161,86 @@ class NavCategory extends React.Component<{}, {}> {
                 )
             )}
         </Menu>
+    }
+}
+
+class SearchComponent extends React.Component<{ history: any }, {}> {
+    public config = new Config();
+
+    state = {
+        isLoading: false,
+        value: '',
+        results: [],
+        timeout: 0
+    }
+
+    public searchPosts() {
+        let context = this;
+        let _search = this.state.value;
+
+        window.clearTimeout(context.state.timeout);
+        var timeoutHandle = setTimeout(function () {
+            context.config.get("Article/s/?s=" + _search)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (response) {
+                    if (response.code != 200) {
+                        return;
+                    }
+
+                    let _posts = new Array();
+                    let responseData = response.responseData;
+                    for (let po of responseData) {
+                        _posts.push({
+                            "title": po.title,
+                            "image": Config.API_FILE + po.image.path,
+                            "urlTitle": po.titleUrl
+                        });
+                    }
+
+                    context.setState({
+                        results: _posts
+                    });
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        }, 2000);
+
+        console.log(this.state.results);
+
+        this.setState({
+            timeout: timeoutHandle 
+        });
+    }
+
+    handleResult = (value: any) => {
+        this.setState({ value: value.currentTarget.value });
+
+        this.searchPosts();
+    };
+
+    handleResultSelect = (e: any) => {
+        this.props.history.push("/view/" + e.currentTarget.attributes.urltitle.value);
+    };
+
+    render() {
+        const { isLoading, value, results } = this.state
+
+        return (
+            <Grid>
+                <Grid.Column width={8}>
+                    <Search
+                        loading={isLoading}
+                        onResultSelect={this.handleResultSelect}
+                        onSearchChange={this.handleResult}
+                        results={results}
+                        value={value}
+                        {...this.props}
+                    />
+                </Grid.Column>
+            </Grid>
+       );
     }
 }

@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { Grid, Icon, Dimmer, Loader, Menu, Message} from 'semantic-ui-react'
+import { Grid, Icon, Dimmer, Loader, Menu, Message, Select} from 'semantic-ui-react'
 
 import FeaturedPost from './components/FeaturedPost';
 import { ElementPostCart } from './components/ElementPost';
@@ -31,6 +31,13 @@ export default class Home extends HomeService {
                         </Message>
                     ) : ''
                 }
+
+                <Select defaultValue={this.state.sort} style={{ float: 'right' }} placeholder='Select your country' options={[
+                    { key: 'DESC', value: 'DESC', text: 'Sortuj od najnowszych' },
+                    { key: 'ASC', value: 'ASC', text: 'Sortuj od najstarszych' }
+                ]}
+                    onChange={this.selectSort} />
+                <hr/>
 
                 <Grid columns={2} container stackable style={{ minHeight: '300px'}}>
                     <Grid.Column style={{ paddingLeft: '0rem' }}>
