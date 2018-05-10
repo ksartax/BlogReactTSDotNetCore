@@ -9,7 +9,7 @@ namespace BlogProgramistyczny.Context.Relations
             ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ArticleCategory>()
-                .HasKey(t => new { t.ArticleId, t.CategoryId });
+                .HasKey(k => new { k.Id });
 
             modelBuilder.Entity<ArticleCategory>()
                 .HasOne(ac => ac.Article)

@@ -21,7 +21,7 @@ class SelectEntity {
     }
 }
 
-export default class ArticleEditModel extends React.Component<{ articleEdit: ArticleView}, {}>
+export default class ArticleEditModel extends React.Component<{ articleEdit: ArticleView, categoriys: Array<SelectEntity>}, {}>
 {
     config = new Config();
 
@@ -36,7 +36,6 @@ export default class ArticleEditModel extends React.Component<{ articleEdit: Art
         sendStatus: 0,
         editText: draftToHtml(this.props.articleEdit.Description),
         articleId: this.props.articleEdit.Id,
-        categorys: Array<SelectEntity>(),
         categories: this.props.articleEdit.GetArrayCategoryId()
     }
 
@@ -45,41 +44,6 @@ export default class ArticleEditModel extends React.Component<{ articleEdit: Art
 
         this.editArticle.bind(this);
         this.handleInput.bind(this);
-    }
-
-    public loadCategory() {
-        let context = this;
-
-        this.config.get("Category?page=1&limit=100")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (response) {
-                if (response.code != 200) {
-                    return;
-                }
-
-                let _categories = new Array<SelectEntity>();
-                let responseData = response.responseData;
-                for (let po of responseData.items) {
-                    _categories.push(new SelectEntity(
-                        po.id,
-                        po.id,
-                        po.title
-                    ));
-                }
-
-                context.setState({
-                    categorys: _categories
-                });
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-    }
-
-    componentDidMount() {
-        this.loadCategory();
     }
 
     private readonly selectGroup = (event: React.SyntheticEvent<HTMLDivElement>, data: any) => {
@@ -209,7 +173,7 @@ export default class ArticleEditModel extends React.Component<{ articleEdit: Art
                                         </Label>
                                     </Grid.Column>
                                     <Grid.Column>
-                                        <Dropdown placeholder='Kategoria' options={this.state.categorys} defaultValue={this.state.categories} selection multiple onChange={this.selectGroup} />
+                                        <Dropdown placeholder='Kategoria' options={this.props.categoriys} defaultValue={this.state.categories} selection multiple onChange={this.selectGroup} />
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>

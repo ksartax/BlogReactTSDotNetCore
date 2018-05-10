@@ -44,7 +44,9 @@ namespace BlogProgramistyczny.Repository
 
         public Article GetFirst()
         {
-            return GetQueryable()
+            return _applicationContext.Articles
+                .Include(a => a.Images)
+                    .ThenInclude(i => i.Image)
                 .OrderByDescending(a => a.CreatedAt)
                 .FirstOrDefault();
         }

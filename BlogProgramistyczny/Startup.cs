@@ -46,7 +46,6 @@ namespace BlogProgramistyczny
             #region Repository
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
 
@@ -56,7 +55,6 @@ namespace BlogProgramistyczny
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IArticleCommentService, ArticleCommentService>();

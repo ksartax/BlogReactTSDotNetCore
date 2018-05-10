@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using BlogProgramistyczny.Repository.Interface;
 using System.Linq;
 using BlogProgramistyczny.Helpers.Paginate;
-using BlogProgramistyczny.ModelView.Category;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogProgramistyczny.Repository

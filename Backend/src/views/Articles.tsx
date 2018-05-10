@@ -8,6 +8,18 @@ import {
 import ArticleEditModel from '../components/ArticleEditModel'
 import { CategoryView } from '../model/Category';
 
+class SelectEntity {
+    public key: string;
+    public value: string;
+    public text: string;
+
+    constructor(Key: string, Value: string, Text: string) {
+        this.key = Key;
+        this.value = Value;
+        this.text = Text;
+    }
+}
+
 export default class Articles extends React.Component<{}, {}>
 {
     public config = new Config();
@@ -16,7 +28,8 @@ export default class Articles extends React.Component<{}, {}>
         articles: Array<ArticleView>(),
         loaderArticles: true,
         pageIndex: 0,
-        totalPage: 0
+        totalPage: 0,
+        categorys: Array<SelectEntity>()
     };
 
     constructor(props: any) {
@@ -25,6 +38,38 @@ export default class Articles extends React.Component<{}, {}>
 
     componentDidMount() {
         this.loadArticles(1);
+        this.loadCategory();
+    }
+
+    public loadCategory() {
+        let context = this;
+
+        this.config.get("Category?page=1&limit=100")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (response) {
+                if (response.code != 200) {
+                    return;
+                }
+
+                let _categories = new Array<SelectEntity>();
+                let responseData = response.responseData;
+                for (let po of responseData.items) {
+                    _categories.push(new SelectEntity(
+                        po.id,
+                        po.id,
+                        po.title
+                    ));
+                }
+
+                context.setState({
+                    categorys: _categories
+                });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
     }
 
     public loadArticles(page: number) {
@@ -115,7 +160,7 @@ export default class Articles extends React.Component<{}, {}>
                                     <Table.Cell>{article.Id}</Table.Cell>
                                     <Table.Cell>{article.Title}</Table.Cell>
                                     <Table.Cell width={2}>
-                                        <ArticleEditModel articleEdit={article}/>
+                                        <ArticleEditModel articleEdit={article} categoriys={this.state.categorys}/>
                                     </Table.Cell>
                                 </Table.Row>  
                             )
